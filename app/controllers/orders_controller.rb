@@ -1,6 +1,11 @@
 class OrdersController < ApplicationController
   def new
-    @order = Order.new(product: Product.find(params[:product_id]))
+    if product
+      @order = Order.new(product: product)
+    else
+      flash[:error] = "Product not found"
+      redirect_to products_path
+    end
   end
 
   def create
@@ -34,5 +39,9 @@ private
 
   def credit_card_params
     params.require(:order).permit( :credit_card_number, :expiration_month, :expiration_year)
+  end
+
+  def product
+    @product ||= Product.find_by(id: params[:product_id])
   end
 end

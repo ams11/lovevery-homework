@@ -16,6 +16,12 @@
       </div>
     </header>
     <main class="container pt-1">
+      <% if flash[:error] %>
+        <div class="flash bg-error"><%= flash[:error] %></div>
+      <% end %>
+      <% if flash[:notice] %>
+        <div class="flash bg-notice"><%= flash[:notice] %></div>
+      <% end %>
       <%= yield %>
     </main>
     <footer class="mt-2 pt-2 border-top">

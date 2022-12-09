@@ -10,50 +10,27 @@
 <%= form_with model: gift, local: true  do |form| %>
   <div class="form-row">
     <div class="form-group col-md-12">
-      <%= form.label :shipping_name, "Your Name" %>
+      <%= form.label :shipping_name, "Parent's Name" %>
       <%= form.text_field :shipping_name, class: "form-control" %>
     </div>
     <div class="form-group col-md-6">
-      <%= form.label :child_full_name, "Your Child's Name" %>
+      <%= form.label :child_full_name, "Child's Name" %>
       <%= form.text_field :child_full_name, class: "form-control" %>
     </div>
     <div class="form-group col-md-6">
-      <%= form.label :child_birthdate, "Your Child's Birthdate (or expected date)" %>
+      <%= form.label :child_birthdate, "Child's Birthdate (or expected date)" %>
       <%= form.text_field :child_birthdate, class: "form-control" %>
       <small id="passwordHelpBlock" class="form-text text-muted">
         Use format YYYY-MM-DD
       </small>
     </div>
   </div>
-  <div class="form-row">
-    <%= form.hidden_field :product_id %>
-    <div class="form-group col-md-8">
-      <%= form.label :address %>
-      <%= form.text_field :address, class: "form-control", placeholder: "e.g. 123 Any St" %>
-    </div>
-    <div class="form-group col-md-4">
-      <%= form.label :zipcode %>
-      <%= form.text_field :zipcode, class: "form-control", placeholder: "e.g. 83701" %>
-    </div>
+  <div class="form-row mb-4">
+    <%= form.label :gift_comment, "Gift message (max: 300 characters)" %>
+    <%= form.text_field :gift_comment, class: "form-control" %>
   </div>
-  <div class="border rounded p-3 bg-light">
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <%= form.label :credit_card_number %>
-        <%= form.password_field :credit_card_number, class: "form-control" %>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col-md-3">
-        <%= form.label :expiration_month %>
-        <%= form.text_field :expiration_month, class: "form-control" %>
-      </div>
-      <div class="form-group col-md-3">
-        <%= form.label :expiration_year %>
-        <%= form.text_field :expiration_year, class: "form-control" %>
-      </div>
-    </div>
-  </div>
+  <%= form.hidden_field :product_id %>
+  <%= render partial: "shared/credit_card", locals: { form: form } %>
   <div class="p-3">
     <%= form.submit("Purchase", class: "btn btn-primary btn-lg") %>
   </div>

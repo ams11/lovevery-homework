@@ -1,4 +1,6 @@
 class GiftsController < ApplicationController
+  include PurchasesHelper
+
   def new
     if product
       render :new, locals: { gift: Gift.new(product: product) }
@@ -9,10 +11,9 @@ class GiftsController < ApplicationController
   end
 
   def create
-    child = Child.find_or_create_by(child_params)
-    gift = Gift.create(gift_params.merge(child: child))
+    gift = GiftCreator.new(child_params(base_params: params.require(:gift)), gift_params).create
     if gift.valid?
-      Purchaser.new.purchase(gift, credit_card_params)
+      Purchaser.new.purchase(gift, credit_card_params(base_params: params.require(:gift)))
       redirect_to gift_path(gift)
     else
       render :new, locals: { gift: gift }
@@ -20,25 +21,15 @@ class GiftsController < ApplicationController
   end
 
   def show
-    @gift = Gift.find_by(id: params[:id]) || Gift.find_by(user_facing_id: params[:id])
+    gift = Gift.includes(:child, :product).find_by(id: params[:id]) ||
+      Gift.includes(:child, :product).find_by(user_facing_id: params[:id])
+    render :show, locals: { gift: gift }
   end
 
   private
 
   def gift_params
-    params.require(:gift).permit(:shipping_name, :product_id, :zipcode, :address).merge(paid: false)
-  end
-
-  def child_params
-    {
-      full_name: params.require(:gift)[:child_full_name],
-      parent_name: params.require(:gift)[:shipping_name],
-      birthdate: Date.parse(params.require(:gift)[:child_birthdate]),
-    }
-  end
-
-  def credit_card_params
-    params.require(:gift).permit( :credit_card_number, :expiration_month, :expiration_year)
+    params.require(:gift).permit(:shipping_name, :product_id, :gift_comment).merge(paid: false)
   end
 
   def product

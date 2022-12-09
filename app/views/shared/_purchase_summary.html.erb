@@ -1,0 +1,36 @@
+<%
+  label = product_purchase.class.to_s
+  if product_purchase.is_a?(Gift)
+    description = " (Gift)"
+    show_comment = true
+  end
+%>
+<article class="p-3">
+  <% if product_purchase.paid? %>
+    <h1>Thanks for Your <%= label %>!</h1>
+  <% else %>
+    <h1>Problem with your <%= label.downcase %></h1>
+  <% end %>
+  <section class="card border rounded rounded-lg <%= product_purchase.paid? ? 'bg-success' : 'bg-danger' %> text-light">
+    <div class="card-body">
+      <h2 class="card-title h4">Order <span class="font-weight-normal h5">#<%= product_purchase.user_facing_id %></span></h2>
+      <h3 class="card-subtitle text-white font-weight-lighter h5 mb-2">
+        <%= product_purchase.product.name %>
+        for
+        <strong><%= product_purchase.child.full_name %></strong><%= description %>
+      </h3>
+      <p class="card-text">
+        <% if product_purchase.paid? %>
+          Paid <span class="text-white font-weight-bold"><%= number_to_currency(product_purchase.product.price_cents / 100) %></span> on <%= product_purchase.created_at.strftime("%B %d, %Y") %>.
+        <% else %>
+          Unable to charge <%= number_to_currency(product_purchase.product.price_cents / 100) %>. Please contact us.
+        <% end %>
+      </p>
+      <% if show_comment %>
+        <div>
+          <h2 class="card-title h4" style="display: inline">Gift message:</h2> <%= product_purchase.gift_comment %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+</article>

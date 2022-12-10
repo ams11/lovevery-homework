@@ -32,8 +32,6 @@ RSpec.feature "Purchase Product", type: :feature do
     expect(page).to have_content("Thanks for Your Order")
     expect(page).to have_content(Order.last.user_facing_id)
     expect(page).to have_content("Kim Jones")
-
-
   end
 
   scenario "Tells us when there was a problem charging our card" do
@@ -68,5 +66,42 @@ RSpec.feature "Purchase Product", type: :feature do
     expect(page).to have_content("Problem with your order")
     expect(page).to have_content(Order.last.user_facing_id)
     expect(page).to have_content("Kim Jones")
+  end
+
+  scenario "Raises an error if child info is missing" do
+    product = Product.create!(
+      name: "product1",
+      description: "description2",
+      price_cents: 1000,
+      age_low_weeks: 0,
+      age_high_weeks: 12,
+      )
+
+    visit "/"
+
+    within ".products-list .product" do
+      click_on "More Details…"
+    end
+
+    click_on "Buy Now $10.00"
+
+    click_on "Purchase"
+    expect(page).to have_content("Check Out")
+    expect(page).to have_content(product.name)
+    expect(page).to have_content("Full name can't be blank,Parent name can't be blank,Birthdate can't be blank")
+  end
+
+  scenario "Redirects to home page and shows an error if product doesn't exist on product page" do
+    Product.create!(
+      name: "product1",
+      description: "description2",
+      price_cents: 1000,
+      age_low_weeks: 0,
+      age_high_weeks: 12,
+      )
+    visit "/orders/new?product_id=#{Product.maximum(:id).next}"
+
+    expect(page).to have_content("Products")
+    expect(page).to have_content("Product not found")
   end
 end

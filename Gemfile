@@ -27,6 +27,7 @@ end
 group :test do
   gem 'capybara', '>= 2.15'
   gem 'webdrivers'
+  gem 'byebug'
 end
 
 gem "rspec-rails", groups: [ :development, :test ]

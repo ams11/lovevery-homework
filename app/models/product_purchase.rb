@@ -5,7 +5,7 @@ class ProductPurchase < ApplicationRecord
   belongs_to :child
 
   before_validation :generate_user_facing_id
-  validates :shipping_name, :address, :zipcode, :product_id, :child_id, presence: true
+  validates :shipping_name, :address, :zipcode, :product_id, :child_id, :paid, presence: true
 
   def to_param
     user_facing_id

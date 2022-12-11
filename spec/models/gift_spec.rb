@@ -5,9 +5,7 @@ RSpec.describe Gift, type: :model do
     it "validates that the gift message cannot exceed 300 characters" do
       gift = Gift.new(
         product: Product.new,
-        shipping_name: "A name",
-        address: "123 Some Road",
-        zipcode: "90210",
+        shipping_address: Address.new,
         gift_comment: "Happy" * 61
       )
 
@@ -28,12 +26,15 @@ RSpec.describe Gift, type: :model do
         birthdate: "2019-03-03",
         parent_name: "Pat Jones",
         )
-      gift = Gift.new(
-        product: product,
-        child: child,
+      address = Address.create!(
         shipping_name: "A name",
         address: "123 Some Road",
         zipcode: "90210",
+      )
+      gift = Gift.new(
+        product: product,
+        child: child,
+        shipping_address: address,
         gift_comment: nil,
         paid: true,
       )

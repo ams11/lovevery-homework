@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_09_070952) do
+ActiveRecord::Schema.define(version: 2022_12_11_065800) do
+
+  create_table "addresses", force: :cascade do |t|
+    t.string "address", null: false
+    t.string "zipcode", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "shipping_name", null: false
+  end
 
   create_table "children", force: :cascade do |t|
     t.string "full_name", null: false
@@ -25,13 +33,12 @@ ActiveRecord::Schema.define(version: 2022_12_09_070952) do
     t.string "user_facing_id", null: false
     t.integer "product_id", null: false
     t.integer "child_id", null: false
-    t.string "shipping_name", null: false
-    t.string "address", null: false
-    t.string "zipcode", null: false
     t.boolean "paid", null: false
     t.string "gift_comment"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "address_id", null: false
+    t.index ["address_id"], name: "index_gifts_on_address_id"
     t.index ["child_id"], name: "index_gifts_on_child_id"
     t.index ["product_id"], name: "index_gifts_on_product_id"
   end
@@ -40,12 +47,11 @@ ActiveRecord::Schema.define(version: 2022_12_09_070952) do
     t.string "user_facing_id", null: false
     t.integer "product_id", null: false
     t.integer "child_id", null: false
-    t.string "shipping_name", null: false
-    t.string "address", null: false
-    t.string "zipcode", null: false
     t.boolean "paid", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "address_id", null: false
+    t.index ["address_id"], name: "index_orders_on_address_id"
     t.index ["child_id"], name: "index_orders_on_child_id"
     t.index ["product_id"], name: "index_orders_on_product_id"
   end
@@ -60,8 +66,10 @@ ActiveRecord::Schema.define(version: 2022_12_09_070952) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "gifts", "addresses"
   add_foreign_key "gifts", "children"
   add_foreign_key "gifts", "products"
+  add_foreign_key "orders", "addresses"
   add_foreign_key "orders", "children"
   add_foreign_key "orders", "products"
 end

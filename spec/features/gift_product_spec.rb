@@ -17,12 +17,15 @@ RSpec.feature "Gift Product", type: :feature do
       birthdate: birthdate,
       parent_name: parent_name,
     )
-    order = Order.create!(
-      product_id: product.id,
-      child_id: child.id,
+    address = Address.create!(
       shipping_name: parent_name,
       address: "1234 Broad St",
       zipcode: "12345",
+    )
+    order = Order.create!(
+      product_id: product.id,
+      child_id: child.id,
+      address_id: address.id,
       paid: true,
     )
 
@@ -82,7 +85,7 @@ RSpec.feature "Gift Product", type: :feature do
 
     expect(page).to have_content("Check Out")
     expect(page).to have_content(product.name)
-    expect(page).to have_content("Child must exist,Address can't be blank,Zipcode can't be blank,Child can't be blank")
+    expect(page).to have_content("Child must exist,Shipping address must exist,Shipping address can't be blank,Child can't be blank")
   end
 
   scenario "Can match the child's address from another Gift for a different product" do
@@ -108,12 +111,15 @@ RSpec.feature "Gift Product", type: :feature do
       birthdate: birthdate,
       parent_name: parent_name,
       )
-    gift = Gift.create!(
-      product_id: product2.id,
-      child_id: child.id,
+    address = Address.create!(
       shipping_name: parent_name,
       address: "1234 Broad St",
       zipcode: "12345",
+      )
+    gift = Gift.create!(
+      product_id: product2.id,
+      child_id: child.id,
+      address_id: address.id,
       paid: true,
       )
 
@@ -153,12 +159,15 @@ RSpec.feature "Gift Product", type: :feature do
       birthdate: birthdate,
       parent_name: parent_name,
       )
-    order = Order.create!(
-      product_id: product.id,
-      child_id: child.id,
+    address = Address.create!(
       shipping_name: parent_name,
       address: "1234 Broad St",
       zipcode: "12345",
+      )
+    order = Order.create!(
+      product_id: product.id,
+      child_id: child.id,
+      address_id: address.id,
       paid: true,
       )
 
@@ -201,12 +210,15 @@ RSpec.feature "Gift Product", type: :feature do
       birthdate: birthdate,
       parent_name: parent_name,
       )
-    order = Order.create!(
-      product_id: product.id,
-      child_id: child.id,
+    address = Address.create!(
       shipping_name: parent_name,
       address: "1234 Broad St",
       zipcode: "12345",
+      )
+    order = Order.create!(
+      product_id: product.id,
+      child_id: child.id,
+      address_id: address.id,
       paid: true,
       )
 

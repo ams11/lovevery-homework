@@ -18,12 +18,15 @@ RSpec.describe GiftCreator, type: :model do
         birthdate: birthdate,
         parent_name: parent_name,
         )
-      order = Order.create!(
-        product_id: product.id,
-        child_id: child.id,
+      address = Address.create!(
         shipping_name: parent_name,
         address: "1234 Broad St",
         zipcode: "12345",
+        )
+      order = Order.create!(
+        product_id: product.id,
+        child_id: child.id,
+        address_id: address.id,
         paid: true,
         )
 
@@ -33,7 +36,6 @@ RSpec.describe GiftCreator, type: :model do
         birthdate: birthdate,
       }
       gift_params = {
-        shipping_name: parent_name,
         product_id: product.id,
         paid: true,
       }
@@ -57,12 +59,15 @@ RSpec.describe GiftCreator, type: :model do
         birthdate: birthdate,
         parent_name: parent_name,
         )
-      gift = Gift.create!(
-        product_id: product.id,
-        child_id: child.id,
+      address = Address.create!(
         shipping_name: parent_name,
         address: "1234 Broad St",
         zipcode: "12345",
+        )
+      gift = Gift.create!(
+        product_id: product.id,
+        child_id: child.id,
+        address_id: address.id,
         paid: true,
         )
 
@@ -72,7 +77,6 @@ RSpec.describe GiftCreator, type: :model do
         birthdate: birthdate,
       }
       gift_params = {
-        shipping_name: parent_name,
         product_id: product.id,
         paid: true,
       }
@@ -95,7 +99,6 @@ RSpec.describe GiftCreator, type: :model do
         birthdate: "2000-01-12",
       }
       gift_params = {
-        shipping_name: "N/A",
         product_id: product.id,
         paid: true,
       }
@@ -127,14 +130,13 @@ RSpec.describe GiftCreator, type: :model do
         birthdate: birthdate,
       }
       gift_params = {
-        shipping_name: parent_name,
         product_id: product.id,
         paid: true,
       }
       gift = GiftCreator.new(child_params, gift_params).create
       expect(gift.valid?).to eq(false)
-      expect(gift.errors[:address]).to eq(["can't be blank"])
-      expect(gift.errors[:zipcode]).to eq(["can't be blank"])
+      expect(gift.errors.count).to eq(2)
+      expect(gift.errors[:shipping_address]).to eq(["must exist", "can't be blank"])
     end
   end
 end

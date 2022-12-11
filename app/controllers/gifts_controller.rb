@@ -26,7 +26,7 @@ class GiftsController < ApplicationController
   private
 
   def gift_params
-    params.require(:gift).permit(:shipping_name, :product_id, :gift_comment).merge(paid: false)
+    params.require(:gift).permit(:product_id, :gift_comment).merge(paid: false)
   end
 
   def product

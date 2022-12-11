@@ -2,5 +2,5 @@ class Address < ApplicationRecord
   has_many :orders
   has_many :gifts
 
-  validates :address, :zipcode, presence: true
+  validates :shipping_name, :address, :zipcode, presence: true
 end

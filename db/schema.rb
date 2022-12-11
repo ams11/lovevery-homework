@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_11_060554) do
+ActiveRecord::Schema.define(version: 2022_12_11_063934) do
 
   create_table "addresses", force: :cascade do |t|
     t.string "address", null: false
@@ -33,13 +33,11 @@ ActiveRecord::Schema.define(version: 2022_12_11_060554) do
     t.integer "product_id", null: false
     t.integer "child_id", null: false
     t.string "shipping_name", null: false
-    t.string "address", null: false
-    t.string "zipcode", null: false
     t.boolean "paid", null: false
     t.string "gift_comment"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "address_id"
+    t.integer "address_id", null: false
     t.index ["address_id"], name: "index_gifts_on_address_id"
     t.index ["child_id"], name: "index_gifts_on_child_id"
     t.index ["product_id"], name: "index_gifts_on_product_id"
@@ -50,12 +48,10 @@ ActiveRecord::Schema.define(version: 2022_12_11_060554) do
     t.integer "product_id", null: false
     t.integer "child_id", null: false
     t.string "shipping_name", null: false
-    t.string "address", null: false
-    t.string "zipcode", null: false
     t.boolean "paid", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "address_id"
+    t.integer "address_id", null: false
     t.index ["address_id"], name: "index_orders_on_address_id"
     t.index ["child_id"], name: "index_orders_on_child_id"
     t.index ["product_id"], name: "index_orders_on_product_id"

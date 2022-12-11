@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_11_063934) do
+ActiveRecord::Schema.define(version: 2022_12_11_065800) do
 
   create_table "addresses", force: :cascade do |t|
     t.string "address", null: false
     t.string "zipcode", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "shipping_name", null: false
   end
 
   create_table "children", force: :cascade do |t|
@@ -32,7 +33,6 @@ ActiveRecord::Schema.define(version: 2022_12_11_063934) do
     t.string "user_facing_id", null: false
     t.integer "product_id", null: false
     t.integer "child_id", null: false
-    t.string "shipping_name", null: false
     t.boolean "paid", null: false
     t.string "gift_comment"
     t.datetime "created_at", precision: 6, null: false
@@ -47,7 +47,6 @@ ActiveRecord::Schema.define(version: 2022_12_11_063934) do
     t.string "user_facing_id", null: false
     t.integer "product_id", null: false
     t.integer "child_id", null: false
-    t.string "shipping_name", null: false
     t.boolean "paid", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

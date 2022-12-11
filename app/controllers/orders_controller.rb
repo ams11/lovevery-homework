@@ -25,7 +25,7 @@ class OrdersController < ApplicationController
   private
 
   def order_params
-    params.require(:order).permit(:product_id).merge(paid: false, shipping_address: Address.new(address_params))
+    params.require(:order).permit(:product_id).merge(paid: false, shipping_address_attributes: address_params)
   end
 
   def address_params

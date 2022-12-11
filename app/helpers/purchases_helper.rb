@@ -7,6 +7,7 @@ module PurchasesHelper
     rescue ArgumentError
       birthdate = nil
     end
+
     {
       full_name: base_params[:child_full_name],
       parent_name: base_params[:shipping_name],

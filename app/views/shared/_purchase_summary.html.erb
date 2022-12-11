@@ -1,8 +1,7 @@
 <%
   label = product_purchase.class.to_s
-  if product_purchase.is_a?(Gift)
+  if show_comment = product_purchase.is_a?(Gift)
     description = " (Gift)"
-    show_comment = true
   end
 %>
 <article class="p-3">

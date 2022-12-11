@@ -29,7 +29,7 @@ RSpec.feature "View Product", type: :feature do
       age_low_weeks: 0,
       age_high_weeks: 12,
       )
-    visit "/products/#{ Product.maximum(:id).next}"
+    visit "/products/#{Product.maximum(:id).next}"
 
     expect(page).to have_content("Products")
     expect(page).to have_content("Product not found")

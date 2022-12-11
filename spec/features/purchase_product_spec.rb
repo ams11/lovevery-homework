@@ -91,7 +91,7 @@ RSpec.feature "Purchase Product", type: :feature do
     expect(page).to have_content("Full name can't be blank,Parent name can't be blank,Birthdate can't be blank")
   end
 
-  scenario "Redirects to home page and shows an error if product doesn't exist on product page" do
+  scenario "Redirects to home page and shows an error if product doesn't exist on new order page" do
     Product.create!(
       name: "product1",
       description: "description2",

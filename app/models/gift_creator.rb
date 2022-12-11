@@ -11,6 +11,7 @@ class GiftCreator
   private
 
   def address_hash
+    # generate a Hash with empty values if @child is nil or if there are no purchases for them
     last_purchase = @child&.purchases&.last
     { address: last_purchase&.address, zipcode: last_purchase&.zipcode }
   end

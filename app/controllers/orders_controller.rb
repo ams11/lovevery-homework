@@ -1,13 +1,10 @@
 class OrdersController < ApplicationController
   include PurchasesHelper
 
+  before_action :validate_product, only: :new
+
   def new
-    if product
-      @order = Order.new(product: product)
-    else
-      flash[:error] = "Product not found"
-      redirect_to products_path
-    end
+    @order = Order.new(product: product)
   end
 
   def create
@@ -33,5 +30,12 @@ class OrdersController < ApplicationController
 
   def product
     @product ||= Product.find_by(id: params[:product_id])
+  end
+
+  def validate_product
+    unless product
+      flash[:error] = "Product not found"
+      redirect_to products_path
+    end
   end
 end

@@ -234,7 +234,7 @@ RSpec.feature "Gift Product", type: :feature do
     expect(page).to have_content("Gift comment cannot exceed 300 characters.")
   end
 
-  scenario "Redirects to home page and shows an error if product doesn't exist on product page" do
+  scenario "Redirects to home page and shows an error if product doesn't exist on new gift page" do
     Product.create!(
       name: "product1",
       description: "description2",

@@ -6,7 +6,7 @@ RSpec.describe ProductPurchase, type: :helper do
       it "raises errors about all required fields" do
         object = klass.new
         expect(object.valid?).to eq(false)
-        expect(object.errors.count).to eq(8)
+        expect(object.errors.count).to eq(7)
         expect(object.errors[:product]).to eq(["must exist"])
         expect(object.errors[:child]).to eq(["must exist"])
         expect(object.errors[:shipping_name]).to eq(["can't be blank"])
@@ -14,7 +14,6 @@ RSpec.describe ProductPurchase, type: :helper do
         expect(object.errors[:zipcode]).to eq(["can't be blank"])
         expect(object.errors[:product_id]).to eq(["can't be blank"])
         expect(object.errors[:child_id]).to eq(["can't be blank"])
-        expect(object.errors[:paid]).to eq(["can't be blank"])
       end
     end
 

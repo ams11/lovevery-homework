@@ -19,85 +19,17 @@ yanny@lovevery.com
 manisha@lovevery.com
 ```
 
-## The Project
+## Updated Project to support gifting
 
-This application is a *very* basic simulation of browsing our products and purchasing one of them.  The
-application should work and it has tests to demonstrate that.  Much is simplified to keep the code minimal and
-avoid making you deal with unnecessary complexity.
+The application now has support for gifting products: when viewing a product, a user now has an option to purchase it or to gift it. Internally, the functionality is quite similar - the purchase will still be associated with a product and a child and will require a sucessful credit card charge to be considered valid. In a production environment, the easiest solution may very well be to extend the `Order` model to support both regular orders and gifts. We'd still need to update the UI, such that the new gift page does not ask the customer to input an address and the corresponding controller logic will only look up an existing child (and get the shipping address from one of the gifts or orders associated with them), instead of optionally creating one, as [`OrdersController#create`](https://github.com/ams11/lovevery-homework/blob/48410e66febb0281524534971a3eba09861519b1/app/controllers/orders_controller.rb#L11) currently does. _However_, I also recall that the instructions were distinctly not to just add a `gift` boolean flag :) - I didn't fully understand it at the time, but it very much makes sense now. So, instead, I've added a new stand-alone [`Gift`](https://github.com/ams11/lovevery-homework/blob/master/app/models/gift.rb) model and a corresponding [`GiftsController`](https://github.com/ams11/lovevery-homework/blob/master/app/controllers/gifts_controller.rb), with similar routing to orders. Long term, this is likely a better solution anyway, as it gives us far more flexibility for the future when gifting products may very well diverge from ordering products more than it does now.
 
-### The basic flow is:
+In the implementation, the logic for gifts and orders is quite similar, so I've tried to cut down on code duplication by sharing the logic between the two models and controllers. The [`Gift`](https://github.com/ams11/lovevery-homework/blob/master/app/models/gift.rb) and [`Order`](https://github.com/ams11/lovevery-homework/blob/master/app/models/order.rb) models now both inherit from the [`ProductPurchase`](https://github.com/ams11/lovevery-homework/blob/master/app/models/product_purchase.rb) parent model, which actually contains almost all of the model logic. The controllers could be optimized more to share code, for now, I've just pulled out some of the shared functionality into a [`PurchasesHelper`](https://github.com/ams11/lovevery-homework/blob/master/app/helpers/purchases_helper.rb) module. I've tried to pull out [at least some of] the duplicate view code into shared partials. Unfortunately, the database still ends up denormalized, with data duplicated between the `orders`, `gifts`, and `children` tables. In more of a real world scenario, if designing this from scratch, I'd consider consolidating the database data to avoid duplication. At the very least, I'd definitely want to pull out the address information into a separate `addresses` table, that the others could reference. Beyond that, we could also consider a [single table inheritance](https://en.wikipedia.org/wiki/Single_Table_Inheritance) structure for a table that could contain both orders and gifts, though while that would cut down on duplication of data, it would still leave the table denormalized (as a row representing an `Order` would still now contain a column for `gift_comment`).
 
-1. Visit `/` and see the products
-1. Select a product to view it
-1. Click to purchase that product
-1. Fill in the data needed to purchase it:
-   - Your name
-   - Your child's name and birthdate
-   - Your address and zip code
-   - Your credit card information
-1. This will create an order in our system, as well as a record for your child if they are not already in the database.
+It's also possible to implement a [polymorphic association](https://guides.rubyonrails.org/association_basics.html#polymorphic-associations) between the `Child` model and `Order`/`Gift` - so that a child could just have a common relationship of `purchasable` items, but that would require a larger re-architecture of the database, as we may have to reverse the relationship between the models, so I decieded not to pursue that option for now. I did add a [`purchases`](https://github.com/ams11/lovevery-homework/blob/48410e66febb0281524534971a3eba09861519b1/app/models/child.rb#L7-L9) method to the `Child` model, which accomplishes largely the same thing by returning a combined array of `Order`'s and `Gift`'s, but as it's computed in memory, it does not get the benfits and optimizations that an `ActiveRelation` would have provided.
 
-What we'd like you to do is allow this app to support gifting.  Instead of a parent buying one of our products for
-their child, we want you to *also* allow anyone to buy a product for any child. Imagine you are someone's aunt or
-uncle and you want to get them a Lovevery product as a gift.
-
-### There are three basic requirements:
-
-* The gift giver can provide an optional message to the child.
-* The gift giver must know the child's name and birthdate, as well as the child's parent's name, but does not need
-to provide the child's shipping address or zipcode.
-* The child must already be in the system, and we can use their previous order shipping information to know how to
-ship the gift order.
-
-Beyond that, it's up to you how to implement this and how it should look.
-
-* There is no "one true answer" so write the code as you would normally for a job.
-* Don't get fancy—this doesn't have to be a demonstration of every skill you have. Focus on solving the problem above as expediently as you can.  In the real world, that's what you'd do in order to get feedback and iterate.
-* Make sure that a) your changes are well tested and b) you don't cause any of the existing tests to fail
-
-Feel free to ask any questions of us, but you can simply make any assumptions you need to get moving. If you ask
-us specifics about the requirements, we might say to use your best judgement.
-
-## Getting Set Up
-
-Assuming you have Ruby installed and are using a Ruby version manager like rvm or rbenv, you should be able to:
-
-```
-> bin/setup
-> yarn install
-> bin/rspec
-```
-
-This should install needed gems, set up your databases, and then run the tests, which should all pass.  If
-anything is wrong at this stage and you can't obviously fix it, let us know.  This is *not* a test of your ability
-to setup a Rails dev environment.
-
-Once you have verified that you can run the specs, run both webpacker and rails server in seperate shells via:
-
-```
-> bin/webpack-dev-server
-> bin/rails s
-```
-
-## Notes About The Code
-
-We've kept this as free of third party dependencies as possible to keep things simple.  There are two main
-dependencies this app uses that aren't part of Rails: Bootstrap and RSpec.
-
-[Bootstrap](https://getbootstrap.com/) is used for styling the site so you don't have to write a bunch of CSS but
-can still produce a decent-looking UI.  Hopefully you find it easy enough to use.
-
-[RSpec](https://rspec.info) is a commonly used testing framework that we use, so we thought it was important to
-put it into this project.  This is not a test of your ability to use every feature of RSpec, so if you are
-unfamiliar with how it works, this is the very very basics that you need:
-
-* `Rspec.describe`, `describe`, `RSpec.feature` create blocks of code and are for organization only.  They have no
-other purpose
-* `it` and `scenario` create blocks of code that *are* the test cases.  Each test case should be given to an `it`
-or `scenario` block, and this app has many examples to follow.
-* To assert things in your tests, you would write `expect(«thing to assert»).to eq(«value you expect it to be»)`, for example `expect(4 + 4).to eq(8)`.  RSpec has *many* (many) more ways to assert things, but if all you use is this one mechanism, you are fine.
-
-Finally, while we tried to write a clean and well-tested app for you, we will go ahead and admit now that it's not
-perfect and there are things that could be improved.  We might ask you about your thoughts on some of this code
-later, but this is all part of the scenario - real-world code is never as nice as we'd like.
+Other considerations and potential improvements:
+ - when creating a gift, we need to look up a child in the database. The lookup is currently exact and case sensitive - it would be nice to make it not case sensitive, but that would require updating the database structure again to save both the originally entered values, and a downcased version to use in lookups. In a real life scenario, we'd want to provide more feedback and validation that you'd found the right child, but I felt that was beyond the scope of the project here. We do currently provide errors when no child was found
+ - when a child is found, we get the address from one of their previous orders or gifts. If there's a child in the database who does not have any orders or gifts already, a new gift cannot be created. The case where only a Gift exists (at some point an Order had to have existed too, but it may have been subsequently deleted) is supported.
+ - I did add some improved error handling for both order and gift processing, it's still not exactly pretty :sweat_smile:
+ - Added tests for all (I think? At least most?) of the new functionality I've added
 

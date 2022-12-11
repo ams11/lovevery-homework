@@ -33,4 +33,6 @@ Other considerations and potential improvements:
  - when a child is found, we get the address from one of their previous orders or gifts. If there's a child in the database who does not have any orders or gifts already, a new gift cannot be created. The case where only a Gift exists (at some point an Order had to have existed too, but it may have been subsequently deleted) is supported.
  - I did add some improved error handling for both order and gift processing, it's still not exactly pretty :sweat_smile:
  - Added tests for all (I think? At least most?) of the new functionality I've added
+ 
+ PS. PR with the changes to add support for gifts: https://github.com/ams11/lovevery-homework/pull/1
 
